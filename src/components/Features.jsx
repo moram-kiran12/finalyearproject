@@ -6,7 +6,7 @@ function Features() {
   const features = [
     {
       id: 1,
-      title: 'Disease Diagnosis & Voice Assistance',
+      title: 'Disease Diagnosis',
       description: 'Identify crop diseases with AI and get instant voice guidance for treatment',
       icon: '🔍',
       link: '/disease-detection',
@@ -14,6 +14,14 @@ function Features() {
     },
     {
       id: 2,
+      title: 'Voice Assistance',
+      description: 'Get real-time voice guidance for farming tasks and queries',
+      icon: '🌾',
+      link: '/voice-assistance',
+      color: '#7cb342'
+    },
+    {
+      id: 3,
       title: 'Crop Cost Estimator',
       description: 'Calculate accurate production costs for better profit planning',
       icon: '💰',
@@ -21,7 +29,7 @@ function Features() {
       color: '#f57c00'
     },
     {
-      id: 3,
+      id: 4,
       title: 'Water Scheduler',
       description: 'Optimize irrigation schedules based on weather and soil conditions',
       icon: '💧',
@@ -29,21 +37,14 @@ function Features() {
       color: '#1976d2'
     },
     {
-      id: 4,
+      id: 5,
       title: 'IoT Water Control',
       description: 'Automated water management using smart IoT sensors',
       icon: '🌐',
       link: '/iot-water-control',
       color: '#388e3c'
     },
-    {
-      id: 5,
-      title: 'Crop Recommendation',
-      description: 'Get personalized crop suggestions based on your land and climate',
-      icon: '🌾',
-      link: '/crop-recommendation',
-      color: '#7cb342'
-    }
+    
   ]
 
   return (

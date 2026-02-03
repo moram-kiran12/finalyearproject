@@ -20,6 +20,12 @@ function Navbar() {
           <li className="nav-item">
             <a href="#footer" className="nav-link">Contact</a>
           </li>
+          <li className="nav-item auth-item">
+            <Link to="/signup" className="signup-btn">✨ Sign Up</Link>
+          </li>
+          <li className="nav-item auth-item">
+            <Link to="/login" className="login-btn">🔐 Login</Link>
+          </li>
         </ul>
       </div>
     </nav>

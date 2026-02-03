@@ -26,7 +26,7 @@ function Footer() {
               <li><a href="/disease-detection">Disease Diagnosis</a></li>
               <li><a href="/crop-cost">Crop Cost</a></li>
               <li><a href="/water-scheduler">Water Scheduler</a></li>
-              <li><a href="/iot-water-control">IoT Control</a></li>
+              <li><a href="/iot-water-control">Water Control</a></li>
             </ul>
           </div>
 

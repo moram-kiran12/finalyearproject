@@ -38,8 +38,8 @@ function Features() {
     },
     {
       id: 5,
-      title: 'IoT Water Control',
-      description: 'Automated water management using smart IoT sensors',
+      title: 'Water Control',
+      description: 'Automated water management for efficient irrigation',
       icon: '🌐',
       link: '/iot-water-control',
       color: '#388e3c'

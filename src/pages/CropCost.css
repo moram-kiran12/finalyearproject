@@ -1,0 +1,437 @@
+.crop-cost-main {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  min-height: calc(100vh - 150px);
+  padding: 30px 20px;
+}
+
+.back-nav {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #2e7d32;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateX(-5px);
+}
+
+.cost-estimator-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.cost-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cost-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2e7d32;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.5px;
+}
+
+.cost-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Language Selector */
+.language-selector {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.lang-btn {
+  padding: 10px 20px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-btn:hover {
+  border-color: #4caf50;
+  color: #2e7d32;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.lang-btn.active {
+  background: #4caf50;
+  color: white;
+  border-color: #4caf50;
+}
+
+/* Crops Section */
+.crops-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.crops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.crop-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 15px;
+  border: 3px solid #e0e0e0;
+  background: #fafafa;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.crop-card:hover {
+  border-color: #4caf50;
+  background: #f1f8f4;
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.15);
+}
+
+.crop-card.selected {
+  border-color: #4caf50;
+  background: #e8f5e9;
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.crop-icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.crop-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+.crop-card.selected .crop-name {
+  color: #2e7d32;
+}
+
+/* Land Area Section */
+.land-area-section {
+  background: #f5f5f5;
+  padding: 30px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.land-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.land-area-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.area-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #4caf50;
+  color: white;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  line-height: 1;
+}
+
+.area-btn:hover {
+  background: #45a049;
+  transform: scale(1.1);
+}
+
+.area-btn.minus {
+  font-size: 28px;
+}
+
+.area-input {
+  width: 100px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.area-input:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+.land-display {
+  font-size: 48px;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+/* Calculate Button */
+.calculate-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 40px;
+  box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
+}
+
+.calculate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.4);
+}
+
+.calculate-btn:active {
+  transform: translateY(0);
+}
+
+/* Costs Section */
+.costs-section {
+  margin-top: 50px;
+}
+
+.costs-table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.costs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.costs-table thead {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  color: white;
+}
+
+.costs-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.costs-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.costs-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.costs-table tbody tr:hover {
+  background: #f5f5f5;
+}
+
+.item-name {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.item-description {
+  color: #999;
+  font-size: 13px;
+}
+
+.item-cost {
+  font-weight: 600;
+  color: #4caf50;
+  text-align: right;
+}
+
+.total-row {
+  background: #f0f8f0;
+  border-top: 3px solid #4caf50;
+  border-bottom: 3px solid #4caf50;
+}
+
+.total-row td {
+  border: none;
+  padding: 18px 16px;
+}
+
+.total-label {
+  color: #2e7d32;
+  font-size: 15px;
+}
+
+.total-cost {
+  color: #2e7d32;
+  font-size: 18px;
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cost-estimator-container {
+    padding: 25px 20px;
+  }
+
+  .cost-title {
+    font-size: 28px;
+  }
+
+  .crops-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+  }
+
+  .crop-card {
+    padding: 15px 10px;
+  }
+
+  .crop-icon {
+    font-size: 32px;
+  }
+
+  .crop-name {
+    font-size: 12px;
+  }
+
+  .costs-table {
+    font-size: 12px;
+  }
+
+  .costs-table th,
+  .costs-table td {
+    padding: 12px 8px;
+  }
+
+  .area-input {
+    width: 80px;
+    font-size: 14px;
+  }
+
+  .land-display {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .crop-cost-main {
+    padding: 15px 10px;
+  }
+
+  .cost-estimator-container {
+    padding: 20px 15px;
+    border-radius: 15px;
+  }
+
+  .cost-title {
+    font-size: 24px;
+  }
+
+  .cost-subtitle {
+    font-size: 14px;
+  }
+
+  .crops-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .crop-card {
+    padding: 12px 8px;
+  }
+
+  .crop-icon {
+    font-size: 28px;
+  }
+
+  .crop-name {
+    font-size: 11px;
+  }
+
+  .language-selector {
+    gap: 8px;
+  }
+
+  .lang-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .costs-table {
+    font-size: 11px;
+  }
+
+  .costs-table th,
+  .costs-table td {
+    padding: 10px 6px;
+  }
+
+  .item-description {
+    display: none;
+  }
+}

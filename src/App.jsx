@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { initializeDemoData } from './utils/demoData'
 import LandingPage from './pages/LandingPage'
 import DiseaseDetection from './pages/DiseaseDetection'
 import VoiceAssistance from './pages/VoiceAssistance'
@@ -12,21 +15,31 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import './App.css'
 
+
 function App() {
+  // Initialize demo data on app load
+  useEffect(() => {
+    initializeDemoData()
+  }, [])
+
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/disease-detection" element={<DiseaseDetection />} />
-        <Route path="/voice-assistance" element={<VoiceAssistance />} />
-        <Route path="/crop-cost" element={<CropCost />} />
-        <Route path="/water-scheduler" element={<WaterScheduler />} />
-        <Route path="/iot-water-control" element={<IoTWaterControl />} />
-        <Route path="/crop-recommendation" element={<CropRecommendation />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/disease-detection" element={<ProtectedRoute><DiseaseDetection /></ProtectedRoute>} />
+          <Route path="/voice-assistance" element={<ProtectedRoute><VoiceAssistance /></ProtectedRoute>} />
+          <Route path="/crop-cost" element={<ProtectedRoute><CropCost /></ProtectedRoute>} />
+          <Route path="/water-scheduler" element={<ProtectedRoute><WaterScheduler /></ProtectedRoute>} />
+          <Route path="/iot-water-control" element={<ProtectedRoute><IoTWaterControl /></ProtectedRoute>} />
+          <Route path="/crop-recommendation" element={<ProtectedRoute><CropRecommendation /></ProtectedRoute>} />
+        </Routes>
+      </AuthProvider>
     </Router>
   )
 }

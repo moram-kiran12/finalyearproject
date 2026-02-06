@@ -11,12 +11,35 @@ function Signup() {
     email: '',
     password: '',
     confirmPassword: '',
-    fullName: ''
+    fullName: '',
+    phone: ''
   })
 
   const [errors, setErrors] = useState({})
   const [successMessage, setSuccessMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  // Password strength checker
+  const getPasswordStrength = (password) => {
+    if (!password) return { strength: 0, requirements: [] }
+    
+    const requirements = []
+    const hasUpperCase = /[A-Z]/.test(password)
+    const hasLowerCase = /[a-z]/.test(password)
+    const hasNumber = /\d/.test(password)
+    const hasSpecialChar = /[@$!%*?&]/.test(password)
+    const isLongEnough = password.length >= 8
+
+    if (hasUpperCase) requirements.push('uppercase')
+    if (hasLowerCase) requirements.push('lowercase')
+    if (hasNumber) requirements.push('number')
+    if (hasSpecialChar) requirements.push('special')
+    if (isLongEnough) requirements.push('length')
+
+    const strength = requirements.length
+
+    return { strength, requirements }
+  }
 
   // Handle input change
   const handleChange = (e) => {
@@ -54,10 +77,23 @@ function Signup() {
       newErrors.email = 'Please enter a valid email'
     }
 
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required'
+    } else if (formData.phone.length !== 10 || !/^[0-9]{10}$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid 10-digit phone number'
+    }
+
     if (!formData.password) {
       newErrors.password = 'Password is required'
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+    } else {
+      // Strong password regex validation
+      const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+      
+      if (formData.password.length < 8) {
+        newErrors.password = 'Password must be at least 8 characters'
+      } else if (!strongPasswordRegex.test(formData.password)) {
+        newErrors.password = 'Password must contain uppercase, lowercase, number, and special character (@$!%*?&)'
+      }
     }
 
     if (!formData.confirmPassword) {
@@ -103,6 +139,7 @@ function Signup() {
           username: formData.username,
           email: formData.email,
           password: formData.password, // In production, never store plain text passwords!
+          phone: formData.phone,
           createdAt: new Date().toLocaleDateString()
         }
 
@@ -119,7 +156,8 @@ function Signup() {
           email: '',
           password: '',
           confirmPassword: '',
-          fullName: ''
+          fullName: '',
+          phone: ''
         })
 
         // Redirect to login after 2 seconds
@@ -206,6 +244,29 @@ function Signup() {
                 {errors.email && <span className="error-text">{errors.email}</span>}
               </div>
 
+              {/* Phone Number Field */}
+              <div className="form-group">
+                <label htmlFor="phone" className="form-label">
+                  <span className="label-icon">📱</span>
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Enter your 10-digit phone number"
+                  className={`form-input ${errors.phone ? 'input-error' : ''}`}
+                  maxLength="10"
+                  pattern="[0-9]*"
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10)
+                  }}
+                />
+                {errors.phone && <span className="error-text">{errors.phone}</span>}
+              </div>
+
               {/* Password Field */}
               <div className="form-group">
                 <label htmlFor="password" className="form-label">
@@ -221,6 +282,38 @@ function Signup() {
                   placeholder="Enter your password"
                   className={`form-input ${errors.password ? 'input-error' : ''}`}
                 />
+                
+                {/* Password Strength Indicator */}
+                {formData.password && (
+                  <div className="password-strength">
+                    <div className="strength-bar">
+                      <div 
+                        className={`strength-fill strength-${getPasswordStrength(formData.password).strength}`}
+                      ></div>
+                    </div>
+                    <div className="requirements">
+                      <p className="requirements-title">Password must contain:</p>
+                      <ul className="requirements-list">
+                        <li className={/[A-Z]/.test(formData.password) ? 'met' : ''}>
+                          {/[A-Z]/.test(formData.password) ? '✓' : '○'} Uppercase (A-Z)
+                        </li>
+                        <li className={/[a-z]/.test(formData.password) ? 'met' : ''}>
+                          {/[a-z]/.test(formData.password) ? '✓' : '○'} Lowercase (a-z)
+                        </li>
+                        <li className={/\d/.test(formData.password) ? 'met' : ''}>
+                          {/\d/.test(formData.password) ? '✓' : '○'} Number (0-9)
+                        </li>
+                        <li className={/@$!%*?&/.test(formData.password) ? 'met' : ''}>
+                          {/@$!%*?&/.test(formData.password) ? '✓' : '○'} Special (@$!%*?&)
+                        </li>
+                        <li className={formData.password.length >= 8 ? 'met' : ''}>
+                          {formData.password.length >= 8 ? '✓' : '○'} At least 8 characters
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+                
                 {errors.password && <span className="error-text">{errors.password}</span>}
               </div>
 

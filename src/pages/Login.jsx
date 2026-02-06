@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import './Login.css'
 
 function Login() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -75,14 +77,15 @@ function Login() {
           return
         }
 
-        // Store logged-in user info
-        localStorage.setItem('loggedInUser', JSON.stringify({
+        // Use AuthContext to login
+        login({
           id: user.id,
           fullName: user.fullName,
           username: user.username,
           email: user.email,
+          phone: user.phone,
           createdAt: user.createdAt
-        }))
+        })
 
         // Reset form
         setFormData({

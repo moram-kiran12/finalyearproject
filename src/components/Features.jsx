@@ -9,7 +9,7 @@ function Features() {
       title: 'Disease Diagnosis',
       description: 'Identify crop diseases with AI and get instant voice guidance for treatment',
       icon: '🔍',
-      link: '/disease-detection',
+      link: '/signup',
       color: '#d32f2f'
     },
     {
@@ -17,7 +17,7 @@ function Features() {
       title: 'Voice Assistance',
       description: 'Get real-time voice guidance for farming tasks and queries',
       icon: '🌾',
-      link: '/voice-assistance',
+      link: '/signup',
       color: '#7cb342'
     },
     {
@@ -25,7 +25,7 @@ function Features() {
       title: 'Crop Cost Estimator',
       description: 'Calculate accurate production costs for better profit planning',
       icon: '💰',
-      link: '/crop-cost',
+      link: '/signup',
       color: '#f57c00'
     },
     {
@@ -33,7 +33,7 @@ function Features() {
       title: 'Water Scheduler',
       description: 'Optimize irrigation schedules based on weather and soil conditions',
       icon: '💧',
-      link: '/water-scheduler',
+      link: '/signup',
       color: '#1976d2'
     },
     {
@@ -41,7 +41,7 @@ function Features() {
       title: 'Water Control',
       description: 'Automated water management for efficient irrigation',
       icon: '🌐',
-      link: '/iot-water-control',
+      link: '/login',
       color: '#388e3c'
     },
     

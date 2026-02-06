@@ -114,7 +114,7 @@ function VoiceAssistance() {
       <Navbar />
       <main className="page-content">
         <div className="voice-header">
-          <Link to="/" className="back-btn">← Back Home</Link>
+          <Link to="/dashboard" className="back-btn">← Back to Dashboard</Link>
           <h1>🎤 Voice Assistance</h1>
           <p className="page-subtitle">Get real-time voice guidance for your farming questions</p>
         </div>

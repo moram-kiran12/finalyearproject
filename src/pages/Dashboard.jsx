@@ -1,34 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import './Dashboard.css'
 
 function Dashboard() {
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const { user, logout, updateUser } = useAuth()
   const [farmLocation, setFarmLocation] = useState('Loading...')
   const [weather, setWeather] = useState(null)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [editFormData, setEditFormData] = useState({
+    fullName: '',
+    username: '',
+    email: '',
+    phone: '',
+    farmName: ''
+  })
 
   useEffect(() => {
-    // Get logged-in user from localStorage
-    const loggedInUser = localStorage.getItem('loggedInUser')
-
-    if (!loggedInUser) {
-      // Redirect to login if not authenticated
-      navigate('/login')
-      return
-    }
-
-    // Parse user data
-    setUser(JSON.parse(loggedInUser))
-
     // Get user's location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords
-        // Reverse geocoding (simplified - you can integrate with Google Maps API)
         fetchLocationName(latitude, longitude)
         fetchWeatherData(latitude, longitude)
       }, (error) => {
@@ -39,14 +34,56 @@ function Dashboard() {
     } else {
       setFarmLocation('Location Unavailable')
     }
-
-    setIsLoading(false)
-  }, [navigate])
+  }, [])
 
   // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('loggedInUser')
+    logout()
     navigate('/login')
+  }
+
+  // Open edit profile modal
+  const handleEditClick = () => {
+    setEditFormData({
+      fullName: user.fullName || '',
+      username: user.username || '',
+      email: user.email || '',
+      phone: user.phone || '',
+      farmName: user.farmName || ''
+    })
+    setIsEditMode(true)
+  }
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  // Handle save profile
+  const handleSaveProfile = () => {
+    if (!editFormData.fullName.trim() || !editFormData.email.trim()) {
+      alert('Please fill in required fields (Name and Email)')
+      return
+    }
+    updateUser(editFormData)
+    setIsEditMode(false)
+    alert('Profile updated successfully!')
+  }
+
+  // Handle cancel edit
+  const handleCancelEdit = () => {
+    setIsEditMode(false)
+    setEditFormData({
+      fullName: '',
+      username: '',
+      email: '',
+      phone: '',
+      farmName: ''
+    })
   }
 
   // Fetch location name from coordinates
@@ -64,7 +101,7 @@ function Dashboard() {
     }
   }
 
-  // Fetch weather data (using Open-Meteo free API - no key needed)
+  // Fetch weather data
   const fetchWeatherData = async (lat, lng) => {
     try {
       const response = await fetch(
@@ -84,20 +121,63 @@ function Dashboard() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="page-container">
-        <Navbar />
-        <main className="page-content">
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p>Loading your dashboard...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    )
-  }
+  // All modules data
+  const modules = [
+    {
+      id: 1,
+      name: 'Disease Detection',
+      icon: '🦠',
+      description: 'AI-powered crop disease identification and prevention',
+      color: '#ef4444',
+      path: '/disease-detection',
+      features: ['Plant leaf analysis', 'Disease identification', 'Treatment suggestions']
+    },
+    {
+      id: 2,
+      name: 'Crop Recommendation',
+      icon: '🌱',
+      description: 'Smart suggestions for optimal crop selection',
+      color: '#22c55e',
+      path: '/crop-recommendation',
+      features: ['Soil analysis', 'Climate matching', 'Yield prediction']
+    },
+    {
+      id: 3,
+      name: 'Water Scheduler',
+      icon: '💧',
+      description: 'Intelligent irrigation scheduling system',
+      color: '#3b82f6',
+      path: '/water-scheduler',
+      features: ['Auto-scheduling', 'Water saving', 'Weather integration']
+    },
+    {
+      id: 4,
+      name: 'IoT Water Control',
+      icon: '🚰',
+      description: 'Remote control of water systems & pumps',
+      color: '#06b6d4',
+      path: '/iot-water-control',
+      features: ['Real-time control', 'Flow monitoring', 'Alert system']
+    },
+    {
+      id: 5,
+      name: 'Crop Cost Management',
+      icon: '💰',
+      description: 'Track expenses and manage farm economics',
+      color: '#f59e0b',
+      path: '/crop-cost',
+      features: ['Expense tracking', 'Profit analysis', 'Budget planning']
+    },
+    {
+      id: 6,
+      name: 'Voice Assistance',
+      icon: '🎤',
+      description: 'Hands-free voice commands for farm operations',
+      color: '#8b5cf6',
+      path: '/voice-assistance',
+      features: ['Voice commands', 'Quick actions', 'Information access']
+    }
+  ]
 
   if (!user) {
     return null
@@ -108,18 +188,18 @@ function Dashboard() {
       <Navbar />
       <main className="page-content">
         <div className="dashboard-container">
-          {/* Header */}
+          {/* Header Section */}
           <div className="dashboard-header">
             <div className="header-content">
               <h1>🌾 Welcome, {user.fullName}!</h1>
-              <p>Your Farm Management Dashboard</p>
+              <p>Your Smart Agriculture Dashboard</p>
             </div>
             <button onClick={handleLogout} className="logout-btn">
               🚪 Logout
             </button>
           </div>
 
-          {/* Stats Cards */}
+          {/* Stats Grid */}
           <div className="stats-grid">
             <div className="stat-card">
               <span className="stat-icon">💧</span>
@@ -151,102 +231,87 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Main Content Grid */}
+          {/* User Profile & Farm Info Grid */}
           <div className="dashboard-grid">
-            {/* User Credentials */}
-            <div className="dashboard-card credentials-card">
+            {/* User Profile Card */}
+            <div className="dashboard-card profile-card">
               <div className="card-header">
-                <h2>👤 Your Credentials</h2>
+                <h2>👤 Your Profile</h2>
                 <span className="verified-badge">✓ Verified</span>
               </div>
 
-              <div className="credentials-list">
-                <div className="credential-item">
-                  <span className="credential-label">Full Name</span>
-                  <p className="credential-value">{user.fullName}</p>
-                </div>
-
-                <div className="credential-item">
-                  <span className="credential-label">Username</span>
-                  <p className="credential-value">@{user.username}</p>
-                </div>
-
-                <div className="credential-item">
-                  <span className="credential-label">Email Address</span>
-                  <p className="credential-value">{user.email}</p>
-                </div>
-
-                <div className="credential-item">
-                  <span className="credential-label">Member Since</span>
-                  <p className="credential-value">{user.createdAt}</p>
-                </div>
-
-                <div className="credential-item">
-                  <span className="credential-label">Account ID</span>
-                  <p className="credential-value">#{user.id}</p>
+              <div className="profile-content">
+                <div className="profile-avatar">{user.fullName.charAt(0)}</div>
+                <div className="profile-info">
+                  <h3>{user.fullName}</h3>
+                  <p>@{user.username}</p>
+                  <p className="profile-email">{user.email}</p>
+                  {user.phone && <p className="profile-phone">📱 {user.phone}</p>}
+                  <p className="profile-member">Member since {user.createdAt}</p>
                 </div>
               </div>
 
-              <button className="edit-btn">✏️ Edit Profile</button>
+              <div className="profile-details">
+                <div className="detail-item">
+                  <span>Account ID</span>
+                  <strong>#{user.id}</strong>
+                </div>
+                <div className="detail-item">
+                  <span>Status</span>
+                  <strong className="status-active">Active</strong>
+                </div>
+              </div>
+
+              <button onClick={handleEditClick} className="edit-btn">✏️ Edit Profile</button>
             </div>
 
-            {/* Quick Access Links */}
-            <div className="dashboard-card quick-access-card">
-              <h2>⚡ Quick Access</h2>
-              <div className="quick-links">
-                <Link to="/iot-water-control" className="quick-link">
-                  <span>💧</span>
-                  <div>
-                    <p>Water Control</p>
-                    <span>Manage irrigation</span>
-                  </div>
-                </Link>
-                <Link to="/disease-detection" className="quick-link">
-                  <span>🦠</span>
-                  <div>
-                    <p>Disease Detection</p>
-                    <span>Check crop health</span>
-                  </div>
-                </Link>
-                <Link to="/crop-recommendation" className="quick-link">
-                  <span>🌱</span>
-                  <div>
-                    <p>Crop Recommendation</p>
-                    <span>Smart suggestions</span>
-                  </div>
-                </Link>
-                <Link to="/weather" className="quick-link">
-                  <span>🌤️</span>
-                  <div>
-                    <p>Weather Info</p>
-                    <span>Real-time updates</span>
-                  </div>
-                </Link>
+            {/* Farm Info Card */}
+            <div className="dashboard-card farm-info-card">
+              <h2>🏞️ Farm Information</h2>
+              <div className="farm-details-grid">
+                <div className="farm-info-item">
+                  <p className="farm-info-label">📍 Location</p>
+                  <p className="farm-info-value">{farmLocation}</p>
+                </div>
+                <div className="farm-info-item">
+                  <p className="farm-info-label">🌡️ Temperature</p>
+                  <p className="farm-info-value">{weather ? `${weather.temp}°C` : 'Loading...'}</p>
+                </div>
+                <div className="farm-info-item">
+                  <p className="farm-info-label">💧 Humidity</p>
+                  <p className="farm-info-value">{weather ? `${weather.humidity}%` : 'Loading...'}</p>
+                </div>
+                <div className="farm-info-item">
+                  <p className="farm-info-label">💨 Wind Speed</p>
+                  <p className="farm-info-value">{weather ? `${weather.windSpeed} km/h` : 'Loading...'}</p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Farm Details */}
-          <div className="dashboard-card farm-details-card">
-            <h2>🏞️ Your Farm Details</h2>
-            <div className="farm-grid">
-              <div className="farm-item">
-                <p className="farm-label">📍 Farm Location</p>
-                <p className="farm-value">{farmLocation}</p>
-              </div>
-              <div className="farm-item">
-                <p className="farm-label">🌡️ Temperature</p>
-                <p className="farm-value">{weather ? `${weather.temp}°C` : 'Loading...'}</p>
-              </div>
-              <div className="farm-item">
-                <p className="farm-label">💧 Humidity</p>
-                <p className="farm-value">{weather ? `${weather.humidity}%` : 'Loading...'}</p>
-              </div>
-              <div className="farm-item">
-                <p className="farm-label">💨 Wind Speed</p>
-                <p className="farm-value">{weather ? `${weather.windSpeed} km/h` : 'Loading...'}</p>
-              </div>
-            </div>
+          {/* Feature Title */}
+          <div className="features-section">
+            <h2>⚡ All Features & Modules</h2>
+            <p>Access all your agricultural tools and management systems</p>
+          </div>
+
+          {/* Modules Grid */}
+          <div className="modules-grid">
+            {modules.map((module) => (
+              <Link key={module.id} to={module.path} className="module-card" style={{ '--card-color': module.color }}>
+                <div className="module-header">
+                  <span className="module-icon">{module.icon}</span>
+                  <h3>{module.name}</h3>
+                </div>
+                <p className="module-description">{module.description}</p>
+                <div className="module-features">
+                  {module.features.map((feature, idx) => (
+                    <span key={idx} className="feature-tag">✓ {feature}</span>
+                  ))}
+                </div>
+                <div className="module-arrow">→</div>
+              </Link>
+            ))}
           </div>
 
           {/* Recent Activity */}
@@ -285,6 +350,91 @@ function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* Edit Profile Modal */}
+      {isEditMode && (
+        <div className="modal-overlay" onClick={handleCancelEdit}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>✏️ Edit Your Profile</h2>
+              <button className="modal-close" onClick={handleCancelEdit}>✕</button>
+            </div>
+
+            <div className="modal-body">
+              <div className="form-group">
+                <label>Full Name *</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={editFormData.fullName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your full name"
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Username</label>
+                <input
+                  type="text"
+                  name="username"
+                  value={editFormData.username}
+                  onChange={handleInputChange}
+                  placeholder="Enter your username"
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={editFormData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={editFormData.phone}
+                  onChange={handleInputChange}
+                  placeholder="Enter your 10-digit phone number"
+                  className="form-input"
+                  maxLength="10"
+                  pattern="[0-9]*"
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10)
+                  }}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Farm Name</label>
+                <input
+                  type="text"
+                  name="farmName"
+                  value={editFormData.farmName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your farm name"
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button onClick={handleCancelEdit} className="btn-cancel">Cancel</button>
+              <button onClick={handleSaveProfile} className="btn-save">Save Profile</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   )

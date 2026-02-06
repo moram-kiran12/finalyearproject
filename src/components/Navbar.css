@@ -115,9 +115,9 @@
 /* Sign Up Button */
 .signup-btn {
   padding: 8px 18px;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%);
+  background-color: transparent;
   color: #ffffff;
-  border: none;
+  border: 2px solid #ffffff;
   border-radius: 22px;
   font-size: 14px;
   font-weight: 600;
@@ -128,7 +128,6 @@
   gap: 6px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
   text-decoration: none;
 }
 
@@ -139,13 +138,23 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  background-color: rgba(255, 255, 255, 0.15);
   transition: left 0.3s ease;
   z-index: -1;
 }
 
 .signup-btn:hover::before {
   left: 0;
+}
+
+.signup-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.signup-btn:active {
+  transform: translateY(0);
 }
 
 .signup-btn:hover {

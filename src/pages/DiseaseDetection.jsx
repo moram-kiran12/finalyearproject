@@ -69,7 +69,7 @@ function DiseaseDetection() {
       <Navbar />
       <main className="page-content">
         <div className="disease-header">
-          <Link to="/" className="back-btn">← Back Home</Link>
+          <Link to="/dashboard" className="back-btn">← Back to Dashboard</Link>
           <h1>🔍 Disease Diagnosis & Voice Assistance</h1>
           <p className="page-subtitle">Identify crop diseases with AI-powered analysis</p>
         </div>

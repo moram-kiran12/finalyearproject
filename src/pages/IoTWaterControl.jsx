@@ -49,7 +49,7 @@ function IoTWaterControl() {
       <Navbar />
       <main className="page-content">
         <div className="page-header">
-          <Link to="/" className="back-btn">← Back Home</Link>
+          <Link to="/dashboard" className="back-btn">← Back to Dashboard</Link>
           <h1>🌐 IoT Water Control</h1>
           <p className="page-subtitle">Automated water management using smart IoT sensors</p>
         </div>

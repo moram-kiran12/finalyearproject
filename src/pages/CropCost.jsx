@@ -57,7 +57,7 @@ function CropCost() {
       <Navbar />
       <main className="crop-cost-main">
         <div className="back-nav">
-          <Link to="/" className="back-btn">← Back</Link>
+          <Link to="/dashboard" className="back-btn">← Back to Dashboard</Link>
         </div>
 
         <div className="cost-estimator-container">

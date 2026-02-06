@@ -1,9 +1,10 @@
 import React from 'react'
 import './Hero.css'
+import { Link } from 'react-router-dom'
 
 function Hero() {
   return (
-    <section className="hero">
+    <section className="hero" id="hero">
       <video 
         className="hero-video" 
         autoPlay 
@@ -18,7 +19,9 @@ function Hero() {
         <div className="hero-content">
           <h1 className="hero-title">Smart Agriculture Platform</h1>
           <p className="hero-subtitle">Get AI-powered crop recommendations, disease detection, and smarter farming solutions</p>
-          <button className="hero-btn">Get Started</button>
+          <Link to="/signup" className="hero-btn-link">
+            <button className="hero-btn">Get Started</button>
+          </Link>
         </div>
       </div>
     </section>

@@ -41,7 +41,7 @@ function WaterScheduler() {
       <Navbar />
       <main className="page-content">
         <div className="page-header">
-          <Link to="/" className="back-btn">← Back Home</Link>
+          <Link to="/dashboard" className="back-btn">← Back to Dashboard</Link>
           <h1>💧 Water Scheduler</h1>
           <p className="page-subtitle">Optimize irrigation schedules based on weather and soil conditions</p>
         </div>

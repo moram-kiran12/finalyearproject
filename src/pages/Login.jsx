@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { ref, get } from 'firebase/database'
+import { auth, database } from '../config/firebase'
 import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
+import { translations } from '../utils/translations'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import './Login.css'
@@ -8,6 +13,8 @@ import './Login.css'
 function Login() {
   const navigate = useNavigate()
   const { login } = useAuth()
+  const { currentLanguage } = useLanguage()
+  const t = translations[currentLanguage]
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -48,7 +55,7 @@ function Login() {
   }
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setErrors({})
 
@@ -60,47 +67,73 @@ function Login() {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      try {
-        // Get users from localStorage
-        const users = JSON.parse(localStorage.getItem('users') || '[]')
+    try {
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      )
 
-        // Find user with matching email and password
-        const user = users.find(
-          u => u.email === formData.email && u.password === formData.password
-        )
+      const firebaseUser = userCredential.user
 
-        if (!user) {
-          setErrors({ submit: 'Invalid email or password' })
-          setIsLoading(false)
-          return
-        }
+      // Fetch user profile from Realtime Database
+      const userRef = ref(database, `users/${firebaseUser.uid}`)
+      const snapshot = await get(userRef)
 
+      if (snapshot.exists()) {
+        const userData = snapshot.val()
         // Use AuthContext to login
         login({
-          id: user.id,
-          fullName: user.fullName,
-          username: user.username,
-          email: user.email,
-          phone: user.phone,
-          createdAt: user.createdAt
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          ...userData
         })
-
-        // Reset form
-        setFormData({
-          email: '',
-          password: ''
+      } else {
+        // If no profile data exists, create a basic user object
+        login({
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          fullName: firebaseUser.displayName || '',
+          username: '',
+          phone: '',
+          createdAt: new Date().toLocaleDateString()
         })
-
-        // Redirect to dashboard
-        navigate('/dashboard')
-      } catch (error) {
-        setErrors({ submit: 'An error occurred during login' })
-      } finally {
-        setIsLoading(false)
       }
-    }, 1000)
+
+      // Reset form
+      setFormData({
+        email: '',
+        password: ''
+      })
+
+      // Redirect to dashboard
+      navigate('/dashboard')
+    } catch (error) {
+      console.error('Login error:', error.code)
+      let errorMessage = 'An error occurred during login'
+
+      switch (error.code) {
+        case 'auth/user-not-found':
+          errorMessage = 'Email not registered. Please sign up first.'
+          break
+        case 'auth/wrong-password':
+          errorMessage = 'Incorrect password. Please try again.'
+          break
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address'
+          break
+        case 'auth/user-disabled':
+          errorMessage = 'This account has been disabled'
+          break
+        default:
+          errorMessage = 'Invalid email or password'
+      }
+
+      setErrors({ submit: errorMessage })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -110,35 +143,35 @@ function Login() {
         <div className="login-wrapper">
           {/* Login Info Section */}
           <div className="login-info">
-            <h3>🌾 Welcome to AgroTech</h3>
-            <p className="info-intro">Your trusted platform for smart farming</p>
+            <h3>🌾 {t.loginWelcome}</h3>
+            <p className="info-intro">{t.loginSubtitle}</p>
             <ul className="info-list">
               <li>
                 <span className="check-icon">✓</span>
                 <div>
-                  <strong>Smart IoT Control</strong>
-                  <p>Manage irrigation & farm equipment remotely</p>
+                  <strong>{t.smartIoTControl}</strong>
+                  <p>{t.smartIoTDesc}</p>
                 </div>
               </li>
               <li>
                 <span className="check-icon">✓</span>
                 <div>
-                  <strong>Crop Health Monitoring</strong>
-                  <p>Real-time disease & pest detection</p>
+                  <strong>{t.cropHealthMonitoring}</strong>
+                  <p>{t.cropHealthDesc}</p>
                 </div>
               </li>
               <li>
                 <span className="check-icon">✓</span>
                 <div>
-                  <strong>Smart Recommendations</strong>
-                  <p>AI-powered crop & schedule suggestions</p>
+                  <strong>{t.smartRecommendations}</strong>
+                  <p>{t.smartRecommendationsDesc}</p>
                 </div>
               </li>
               <li>
                 <span className="check-icon">✓</span>
                 <div>
-                  <strong>Analytics Dashboard</strong>
-                  <p>Track yield & resource usage</p>
+                  <strong>{t.analyticsDashboard}</strong>
+                  <p>{t.analyticsDashboardDesc}</p>
                 </div>
               </li>
             </ul>
@@ -147,8 +180,8 @@ function Login() {
           {/* Login Container */}
           <div className="login-container">
             <div className="login-header">
-              <h1>🔐 Login</h1>
-              <p>Access your farm management dashboard</p>
+              <h1>🔐 {t.loginTitle}</h1>
+              <p>{t.loginAccess}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="login-form">
@@ -156,7 +189,7 @@ function Login() {
               <div className="form-group">
                 <label htmlFor="email" className="form-label">
                   <span className="label-icon">📧</span>
-                  Email Address
+                  {t.emailAddress}
                 </label>
                 <input
                   type="email"
@@ -164,7 +197,7 @@ function Login() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="your.email@gmail.com"
+                  placeholder={t.emailPlaceholder}
                   className={`form-input ${errors.email ? 'input-error' : ''}`}
                 />
                 {errors.email && <span className="error-text">{errors.email}</span>}
@@ -175,9 +208,9 @@ function Login() {
                 <div className="password-header">
                   <label htmlFor="password" className="form-label">
                     <span className="label-icon">🔒</span>
-                    Password
+                    {t.password}
                   </label>
-                  <a href="#" className="forgot-password">Forgot?</a>
+                  <a href="#" className="forgot-password">{t.forgotPassword}</a>
                 </div>
                 <input
                   type="password"
@@ -185,7 +218,7 @@ function Login() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
+                  placeholder={t.passwordPlaceholder}
                   className={`form-input ${errors.password ? 'input-error' : ''}`}
                 />
                 {errors.password && <span className="error-text">{errors.password}</span>}
@@ -201,20 +234,20 @@ function Login() {
                 disabled={isLoading}
                 className={`submit-btn ${isLoading ? 'loading' : ''}`}
               >
-                {isLoading ? '⏳ Logging in...' : '✓ Login'}
+                {isLoading ? `⏳ ${t.loggingIn}` : `✓ ${t.loginButton}`}
               </button>
             </form>
 
             {/* Signup Link */}
             <div className="auth-footer">
-              <p>Don't have an account? <Link to="/signup" className="auth-link">Sign up here</Link></p>
+              <p>{t.dontHaveAccount} <Link to="/signup" className="auth-link">{t.signupHere}</Link></p>
             </div>
 
             {/* Demo Info */}
             <div className="demo-info">
-              <p><strong>Demo Account:</strong></p>
-              <p>Email: demo@agrotech.com</p>
-              <p>Password: demo123</p>
+              <p><strong>{t.demoAccount}</strong></p>
+              <p>{t.demoEmail}</p>
+              <p>{t.demoPassword}</p>
             </div>
           </div>
         </div>

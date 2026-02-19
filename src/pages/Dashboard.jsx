@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
+import { translations } from '../utils/translations'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import './Dashboard.css'
@@ -8,6 +10,8 @@ import './Dashboard.css'
 function Dashboard() {
   const navigate = useNavigate()
   const { user, logout, updateUser } = useAuth()
+  const { currentLanguage } = useLanguage()
+  const t = translations[currentLanguage]
   const [farmLocation, setFarmLocation] = useState('Loading...')
   const [weather, setWeather] = useState(null)
   const [isEditMode, setIsEditMode] = useState(false)
@@ -125,57 +129,58 @@ function Dashboard() {
   const modules = [
     {
       id: 1,
-      name: 'Disease Detection',
+      name: t.diseaseDetectionModule,
       icon: '🦠',
-      description: 'AI-powered crop disease identification and prevention',
+      description: t.diseaseDetectionDesc,
       color: '#ef4444',
       path: '/disease-detection',
-      features: ['Plant leaf analysis', 'Disease identification', 'Treatment suggestions']
+      features: [t.plantLeafAnalysis, t.diseaseIdentification, t.treatmentSuggestions]
     },
+   
     {
       id: 2,
-      name: 'Crop Recommendation',
-      icon: '🌱',
-      description: 'Smart suggestions for optimal crop selection',
-      color: '#22c55e',
-      path: '/crop-recommendation',
-      features: ['Soil analysis', 'Climate matching', 'Yield prediction']
+      name: t.waterSchedulerModule,
+      icon: '💧',
+      description: t.waterSchedulerDesc,
+      color: '#3b82f6',
+      path: '/water-scheduler',
+      features: [t.autoScheduling, t.waterSaving, t.weatherIntegration]
     },
     {
       id: 3,
-      name: 'Water Scheduler',
-      icon: '💧',
-      description: 'Intelligent irrigation scheduling system',
-      color: '#3b82f6',
-      path: '/water-scheduler',
-      features: ['Auto-scheduling', 'Water saving', 'Weather integration']
+      name: t.iotWaterControlModule,
+      icon: '🚰',
+      description: t.iotWaterControlDesc,
+      color: '#06b6d4',
+      path: '/iot-water-control',
+      features: [t.realtimeControl, t.flowMonitoring, t.alertSystem]
     },
     {
       id: 4,
-      name: 'IoT Water Control',
-      icon: '🚰',
-      description: 'Remote control of water systems & pumps',
-      color: '#06b6d4',
-      path: '/iot-water-control',
-      features: ['Real-time control', 'Flow monitoring', 'Alert system']
+      name: t.cropCostModule,
+      icon: '💰',
+      description: t.cropCostDesc,
+      color: '#f59e0b',
+      path: '/crop-cost',
+      features: [t.expenseTracking, t.profitAnalysis, t.budgetPlanning]
     },
     {
       id: 5,
-      name: 'Crop Cost Management',
-      icon: '💰',
-      description: 'Track expenses and manage farm economics',
-      color: '#f59e0b',
-      path: '/crop-cost',
-      features: ['Expense tracking', 'Profit analysis', 'Budget planning']
+      name: t.voiceAssistanceModule,
+      icon: '🎤',
+      description: t.voiceAssistanceDesc,
+      color: '#8b5cf6',
+      path: '/voice-assistance',
+      features: [t.voiceCommands, t.quickActions, t.informationAccess]
     },
     {
       id: 6,
-      name: 'Voice Assistance',
-      icon: '🎤',
-      description: 'Hands-free voice commands for farm operations',
-      color: '#8b5cf6',
-      path: '/voice-assistance',
-      features: ['Voice commands', 'Quick actions', 'Information access']
+      name: t.cropRecommendationModule,
+      icon: '🌱',
+      description: t.cropRecommendationDesc,
+      color: '#00897b',
+      path: '/crop-recommendation',
+      features: [t.soilAnalysis, t.climateMatching, t.bestCropSuggestions]
     }
   ]
 
@@ -199,34 +204,17 @@ function Dashboard() {
             </button>
           </div>
 
-          {/* Stats Grid */}
-          <div className="stats-grid">
-            <div className="stat-card">
-              <span className="stat-icon">💧</span>
-              <div>
-                <p className="stat-label">Water Used</p>
-                <p className="stat-value">2,450 L</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <span className="stat-icon">🌾</span>
-              <div>
-                <p className="stat-label">Crops Monitored</p>
-                <p className="stat-value">5</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <span className="stat-icon">📊</span>
-              <div>
-                <p className="stat-label">Farm Health</p>
-                <p className="stat-value">98%</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <span className="stat-icon">🎯</span>
-              <div>
-                <p className="stat-label">Yield Target</p>
-                <p className="stat-value">500 kg</p>
+          {/* Aesthetic Banner */}
+          <div className="aesthetic-banner">
+            <img 
+              src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&h=200&fit=crop" 
+              alt="Agriculture Landscape" 
+              className="banner-image"
+            />
+            <div className="banner-overlay">
+              <div className="banner-content">
+                <h2 className="banner-title">🌱 Smart Farming for Better Future</h2>
+                <p className="banner-subtitle">Sustainable Agriculture • AI-Powered Insights • Better Yields</p>
               </div>
             </div>
           </div>
@@ -297,8 +285,13 @@ function Dashboard() {
 
           {/* Modules Grid */}
           <div className="modules-grid">
-            {modules.map((module) => (
-              <Link key={module.id} to={module.path} className="module-card" style={{ '--card-color': module.color }}>
+            {modules.map((module, index) => (
+              <Link 
+                key={module.id} 
+                to={module.path} 
+                className="module-card" 
+                style={{ '--card-color': module.color, '--card-index': index }}
+              >
                 <div className="module-header">
                   <span className="module-icon">{module.icon}</span>
                   <h3>{module.name}</h3>

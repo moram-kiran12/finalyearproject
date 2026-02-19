@@ -39,19 +39,20 @@ function DiseaseDetection() {
       const formData = new FormData()
       formData.append('image', selectedImage)
 
-      const response = await fetch('http://localhost:5000/api/detect-disease', {
+      const response = await fetch('http://localhost:5000/predict', {
         method: 'POST',
         body: formData,
       })
 
       if (!response.ok) {
-        throw new Error('Failed to analyze image')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to analyze image')
       }
 
       const data = await response.json()
       setResult(data)
     } catch (err) {
-      setError(err.message || 'Error analyzing image. Make sure backend is running.')
+      setError(err.message || 'Error analyzing image. Make sure backend is running on http://localhost:5000')
     } finally {
       setLoading(false)
     }
@@ -126,45 +127,28 @@ function DiseaseDetection() {
               <h2>Analysis Results</h2>
               <div className="result-card">
                 <div className="result-header">
-                  <h3>{result.disease || 'Disease Detection'}</h3>
-                  <span className={`confidence ${result.confidence ? (result.confidence > 0.7 ? 'high' : 'medium') : ''}`}>
-                    {result.confidence ? `${(result.confidence * 100).toFixed(1)}%` : 'Analyzing...'}
+                  <h3>🌾 {result.predicted_class || 'Disease Detected'}</h3>
+                  <span className={`confidence ${result.confidence > 70 ? 'high' : result.confidence > 50 ? 'medium' : 'low'}`}>
+                    {result.confidence ? `${result.confidence}% Confidence` : 'Analyzing...'}
                   </span>
                 </div>
                 
-                {result.description && (
-                  <div className="result-detail">
-                    <h4>📋 Description</h4>
-                    <p>{result.description}</p>
+                {result.medication && (
+                  <div className="result-detail medication-advice">
+                    <h4>💊 Medication & Treatment Advice</h4>
+                    <div className="medication-text">
+                      {result.medication.split('\n').map((line, index) => (
+                        <p key={index} className={line.trim() === '' ? 'empty-line' : ''}>
+                          {line}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                {result.treatment && (
-                  <div className="result-detail">
-                    <h4>💊 Treatment</h4>
-                    <p>{result.treatment}</p>
-                  </div>
-                )}
-
-                {result.prevention && (
-                  <div className="result-detail">
-                    <h4>🛡️ Prevention</h4>
-                    <p>{result.prevention}</p>
-                  </div>
-                )}
-
-                {result.voice_guidance && (
-                  <div className="voice-section">
-                    <h4>🔊 Voice Guidance</h4>
-                    <button 
-                      onClick={() => {
-                        const speech = new SpeechSynthesisUtterance(result.voice_guidance)
-                        window.speechSynthesis.speak(speech)
-                      }}
-                      className="voice-btn"
-                    >
-                      🎵 Play Voice Guidance
-                    </button>
+                {result.error && (
+                  <div className="error-detail">
+                    <p>⚠️ {result.error}</p>
                   </div>
                 )}
 

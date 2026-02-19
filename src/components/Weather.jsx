@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import './Weather.css'
+import { useLanguage } from '../contexts/LanguageContext'
+import { translations } from '../utils/translations'
 
 function Weather() {
+  const { currentLanguage } = useLanguage()
+  const t = translations[currentLanguage]
+  
   const [weather, setWeather] = useState({
     temp: 28,
     humidity: 65,
@@ -68,46 +73,46 @@ function Weather() {
   return (
     <section className="weather-section">
       <div className="weather-header">
-        <h2 className="section-title">⛅ Weather</h2>
+        <h2 className="section-title">⛅ {t.weatherTitle}</h2>
         <h3 className="location-name">📍 {weather.location}</h3>
       </div>
       {loading ? (
-        <div className="loading-weather">Loading weather data...</div>
+        <div className="loading-weather">{t.loadingWeather}</div>
       ) : (
         <div className="weather-container">
           <div className="weather-card">
             <div className="weather-icon">🌡️</div>
             <div className="weather-info">
-              <h3>Temperature</h3>
+              <h3>{t.temperature}</h3>
               <p className="weather-value">{weather.temp}°C</p>
-              <p className="weather-detail">{weather.temp > 30 ? 'Hot' : weather.temp > 20 ? 'Moderate' : 'Cool'}</p>
+              <p className="weather-detail">{weather.temp > 30 ? t.hot : weather.temp > 20 ? t.moderate : t.cool}</p>
             </div>
           </div>
 
           <div className="weather-card">
             <div className="weather-icon">💧</div>
             <div className="weather-info">
-              <h3>Humidity</h3>
+              <h3>{t.humidity}</h3>
               <p className="weather-value">{weather.humidity}%</p>
-              <p className="weather-detail">{weather.humidity > 70 ? 'High' : weather.humidity > 50 ? 'Comfortable' : 'Low'}</p>
+              <p className="weather-detail">{weather.humidity > 70 ? t.high : weather.humidity > 50 ? t.comfortable : t.low}</p>
             </div>
           </div>
 
           <div className="weather-card">
             <div className="weather-icon">💨</div>
             <div className="weather-info">
-              <h3>Wind Speed</h3>
+              <h3>{t.windSpeed}</h3>
               <p className="weather-value">{weather.windSpeed} km/h</p>
-              <p className="weather-detail">{weather.windSpeed > 20 ? 'Strong Wind' : weather.windSpeed > 10 ? 'Light Breeze' : 'Calm'}</p>
+              <p className="weather-detail">{weather.windSpeed > 20 ? t.strongWind : weather.windSpeed > 10 ? t.lightBreeze : t.calm}</p>
             </div>
           </div>
 
           <div className="weather-card">
             <div className="weather-icon">☔</div>
             <div className="weather-info">
-              <h3>Rainfall</h3>
+              <h3>{t.rainfall}</h3>
               <p className="weather-value">{weather.rainfall} mm</p>
-              <p className="weather-detail">{weather.rainfall > 2 ? 'Rain Expected' : 'No Rain Expected'}</p>
+              <p className="weather-detail">{weather.rainfall > 2 ? t.rainExpected : t.noRain}</p>
             </div>
           </div>
         </div>

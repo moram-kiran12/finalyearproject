@@ -1,18 +1,24 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { ref, set } from 'firebase/database'
+import { auth, database } from '../config/firebase'
+import { useLanguage } from '../contexts/LanguageContext'
+import { translations } from '../utils/translations'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import './Signup.css'
 
 function Signup() {
   const navigate = useNavigate()
+  const { currentLanguage } = useLanguage()
+  const t = translations[currentLanguage]
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
-    fullName: '',
-    phone: ''
+    fullName: ''
   })
 
   const [errors, setErrors] = useState({})
@@ -77,12 +83,6 @@ function Signup() {
       newErrors.email = 'Please enter a valid email'
     }
 
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required'
-    } else if (formData.phone.length !== 10 || !/^[0-9]{10}$/.test(formData.phone)) {
-      newErrors.phone = 'Please enter a valid 10-digit phone number'
-    }
-
     if (!formData.password) {
       newErrors.password = 'Password is required'
     } else {
@@ -106,7 +106,7 @@ function Signup() {
   }
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setErrors({})
 
@@ -118,58 +118,70 @@ function Signup() {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      try {
-        // Get existing users from localStorage
-        const existingUsers = JSON.parse(localStorage.getItem('users') || '[]')
+    try {
+      // Create user with Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      )
 
-        // Check if user already exists
-        const userExists = existingUsers.some(user => user.email === formData.email)
-        if (userExists) {
-          setErrors({ email: 'Email already registered' })
-          setIsLoading(false)
-          return
-        }
+      const firebaseUser = userCredential.user
 
-        // Create new user object
-        const newUser = {
-          id: Date.now(),
-          fullName: formData.fullName,
-          username: formData.username,
-          email: formData.email,
-          password: formData.password, // In production, never store plain text passwords!
-          phone: formData.phone,
-          createdAt: new Date().toLocaleDateString()
-        }
+      // Update user profile with display name
+      await updateProfile(firebaseUser, {
+        displayName: formData.fullName
+      })
 
-        // Add user to localStorage
-        existingUsers.push(newUser)
-        localStorage.setItem('users', JSON.stringify(existingUsers))
+      // Store user profile in Realtime Database
+      const userNode = ref(database, `users/${firebaseUser.uid}`)
+      await set(userNode, {
+        fullName: formData.fullName,
+        username: formData.username,
+        email: formData.email,
+        phone: '',
+        createdAt: new Date().toLocaleDateString()
+      })
 
-        // Set success message
-        setSuccessMessage('Signup successful! Redirecting to login...')
+      // Set success message
+      setSuccessMessage('Signup successful! Redirecting to login...')
 
-        // Reset form
-        setFormData({
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          fullName: '',
-          phone: ''
-        })
+      // Reset form
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        fullName: ''
+      })
 
-        // Redirect to login after 2 seconds
-        setTimeout(() => {
-          navigate('/login')
-        }, 2000)
-      } catch (error) {
-        setErrors({ submit: 'An error occurred during signup' })
-      } finally {
-        setIsLoading(false)
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000)
+    } catch (error) {
+      console.error('Signup error:', error.code)
+      let errorMessage = 'An error occurred during signup'
+
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          errorMessage = 'Email already registered. Please login or use another email.'
+          setErrors({ email: errorMessage })
+          break
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address'
+          setErrors({ email: errorMessage })
+          break
+        case 'auth/weak-password':
+          errorMessage = 'Password is too weak'
+          setErrors({ password: errorMessage })
+          break
+        default:
+          setErrors({ submit: errorMessage })
       }
-    }, 1000)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -179,8 +191,8 @@ function Signup() {
         <div className="signup-wrapper">
           <div className="signup-container">
             <div className="signup-header">
-              <h1>🚜 Join AgroTech</h1>
-              <p>Create your account to manage your farm efficiently</p>
+              <h1>🚜 {t.joinAgrotech}</h1>
+              <p>{t.signupSubtitle}</p>
             </div>
 
             {successMessage && (
@@ -194,7 +206,7 @@ function Signup() {
               <div className="form-group">
                 <label htmlFor="fullName" className="form-label">
                   <span className="label-icon">👤</span>
-                  Full Name
+                  {t.fullName}
                 </label>
                 <input
                   type="text"
@@ -202,7 +214,7 @@ function Signup() {
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleChange}
-                  placeholder="Enter your full name"
+                  placeholder={t.fullNamePlaceholder}
                   className={`form-input ${errors.fullName ? 'input-error' : ''}`}
                 />
                 {errors.fullName && <span className="error-text">{errors.fullName}</span>}
@@ -212,7 +224,7 @@ function Signup() {
               <div className="form-group">
                 <label htmlFor="username" className="form-label">
                   <span className="label-icon">👨‍🌾</span>
-                  Username
+                  {t.username}
                 </label>
                 <input
                   type="text"
@@ -220,7 +232,7 @@ function Signup() {
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
-                  placeholder="Choose your username"
+                  placeholder={t.usernamePlaceholder}
                   className={`form-input ${errors.username ? 'input-error' : ''}`}
                 />
                 {errors.username && <span className="error-text">{errors.username}</span>}
@@ -230,7 +242,7 @@ function Signup() {
               <div className="form-group">
                 <label htmlFor="email" className="form-label">
                   <span className="label-icon">📧</span>
-                  Email Address
+                  {t.emailAddress}
                 </label>
                 <input
                   type="email"
@@ -238,40 +250,17 @@ function Signup() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="your.email@gmail.com"
+                  placeholder={t.emailPlaceholder}
                   className={`form-input ${errors.email ? 'input-error' : ''}`}
                 />
                 {errors.email && <span className="error-text">{errors.email}</span>}
-              </div>
-
-              {/* Phone Number Field */}
-              <div className="form-group">
-                <label htmlFor="phone" className="form-label">
-                  <span className="label-icon">📱</span>
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Enter your 10-digit phone number"
-                  className={`form-input ${errors.phone ? 'input-error' : ''}`}
-                  maxLength="10"
-                  pattern="[0-9]*"
-                  onInput={(e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10)
-                  }}
-                />
-                {errors.phone && <span className="error-text">{errors.phone}</span>}
-              </div>
+             </div>
 
               {/* Password Field */}
               <div className="form-group">
                 <label htmlFor="password" className="form-label">
                   <span className="label-icon">🔐</span>
-                  Password
+                  {t.password}
                 </label>
                 <input
                   type="password"
@@ -279,7 +268,7 @@ function Signup() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
+                  placeholder={t.passwordPlaceholder}
                   className={`form-input ${errors.password ? 'input-error' : ''}`}
                 />
                 
@@ -321,7 +310,7 @@ function Signup() {
               <div className="form-group">
                 <label htmlFor="confirmPassword" className="form-label">
                   <span className="label-icon">✓</span>
-                  Confirm Password
+                  {t.confirmPassword}
                 </label>
                 <input
                   type="password"
@@ -329,7 +318,7 @@ function Signup() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Confirm your password"
+                  placeholder={t.confirmPasswordPlaceholder}
                   className={`form-input ${errors.confirmPassword ? 'input-error' : ''}`}
                 />
                 {errors.confirmPassword && <span className="error-text">{errors.confirmPassword}</span>}
@@ -345,46 +334,60 @@ function Signup() {
                 disabled={isLoading}
                 className={`submit-btn ${isLoading ? 'loading' : ''}`}
               >
-                {isLoading ? '⏳ Creating Account...' : '✨ Create Account'}
+                {isLoading ? `⏳ ${t.creatingAccount}` : `✨ ${t.createAccount}`}
               </button>
             </form>
 
             {/* Login Link */}
             <div className="auth-footer">
-              <p>Already have an account? <Link to="/login" className="auth-link">Login here</Link></p>
+              <p>{t.alreadyHaveAccount} <Link to="/login" className="auth-link">{t.loginHere}</Link></p>
             </div>
           </div>
 
           {/* Info Section */}
           <div className="signup-info">
-            <h3>🎯 Why Join AgroTech?</h3>
+            <h3>� Why Join AgroTech?</h3>
             <ul className="info-list">
-              <li>
-                <span className="check-icon">✓</span>
+              <li style={{'--item-index': 0}}>
+                <span className="check-icon">💧</span>
                 <div>
-                  <strong>Smart Irrigation</strong>
-                  <p>Control water pumps with IoT sensors</p>
+                  <strong>AI-Powered Smart Irrigation</strong>
+                  <p>Automate water management with IoT sensors and reduce water consumption by up to 40%</p>
                 </div>
               </li>
-              <li>
-                <span className="check-icon">✓</span>
+              <li style={{'--item-index': 1}}>
+                <span className="check-icon">🦠</span>
                 <div>
-                  <strong>Disease Detection</strong>
-                  <p>Identify crop diseases early</p>
+                  <strong>Early Disease Detection</strong>
+                  <p>Identify plant diseases using advanced AI models before they spread across your farm</p>
                 </div>
               </li>
-              <li>
-                <span className="check-icon">✓</span>
+              <li style={{'--item-index': 2}}>
+                <span className="check-icon">🌤️</span>
                 <div>
-                  <strong>Weather Insights</strong>
-                  <p>Get real-time weather updates</p>
+                  <strong>Real-Time Weather Analytics</strong>
+                  <p>Make data-driven decisions with hyper-local weather forecasts and climate insights</p>
                 </div>
               </li>
-              <li>
-                <span className="check-icon">✓</span>
+              <li style={{'--item-index': 3}}>
+                <span className="check-icon">🌱</span>
                 <div>
-                  <strong>Crop Recommendations</strong>
-                  <p>Smart suggestions for better yields</p>
+                  <strong>Crop Yield Optimization</strong>
+                  <p>Get personalized crop recommendations and maximize yields with precision farming</p>
+                </div>
+              </li>
+              <li style={{'--item-index': 4}}>
+                <span className="check-icon">📊</span>
+                <div>
+                  <strong>Farm Analytics Dashboard</strong>
+                  <p>Monitor your entire farm operation from a single, comprehensive control center</p>
+                </div>
+              </li>
+              <li style={{'--item-index': 5}}>
+                <span className="check-icon">🤖</span>
+                <div>
+                  <strong>Voice Assistant Support</strong>
+                  <p>Control your farm operations hands-free with multilingual AI voice commands</p>
                 </div>
               </li>
             </ul>

@@ -249,6 +249,52 @@
   margin: 0;
 }
 
+.medication-advice {
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+  border-left: 5px solid #4caf50;
+}
+
+.medication-text {
+  color: #2e7d32;
+  line-height: 2;
+  font-size: 0.95rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.medication-text p {
+  margin: 0.5rem 0;
+  color: #2e7d32;
+  line-height: 1.8;
+}
+
+.medication-text p:first-child {
+  margin-top: 0;
+}
+
+.medication-text p:last-child {
+  margin-bottom: 0;
+}
+
+.medication-text .empty-line {
+  min-height: 0.5rem;
+}
+
+.error-detail {
+  background: #ffebee;
+  border-left: 4px solid #d32f2f;
+  color: #d32f2f;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.error-detail p {
+  margin: 0;
+  color: #d32f2f;
+}
+
 .voice-section {
   background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
   padding: 1.5rem;

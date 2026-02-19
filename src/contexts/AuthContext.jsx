@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { ref, get } from 'firebase/database'
+import { auth, database } from '../config/firebase'
 
 const AuthContext = createContext()
 
@@ -7,41 +10,70 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Check if user is logged in on mount
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('loggedInUser')
-    if (loggedInUser) {
-      try {
-        setUser(JSON.parse(loggedInUser))
-        setIsAuthenticated(true)
-      } catch (error) {
-        console.error('Error parsing user data:', error)
-        localStorage.removeItem('loggedInUser')
+    // Listen to Firebase authentication state changes
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          // Fetch user profile from Realtime Database
+          const userRef = ref(database, `users/${firebaseUser.uid}`)
+          const snapshot = await get(userRef)
+          
+          if (snapshot.exists()) {
+            const userData = snapshot.val()
+            const userWithAuth = {
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              ...userData
+            }
+            setUser(userWithAuth)
+            setIsAuthenticated(true)
+          } else {
+            // If no profile data, at least set the authenticated user
+            setUser({
+              id: firebaseUser.uid,
+              email: firebaseUser.email,
+              fullName: firebaseUser.displayName || '',
+              username: '',
+              phone: '',
+              createdAt: new Date().toLocaleDateString()
+            })
+            setIsAuthenticated(true)
+          }
+        } catch (error) {
+          console.error('Error fetching user profile:', error)
+          setUser(null)
+          setIsAuthenticated(false)
+        }
+      } else {
+        setUser(null)
+        setIsAuthenticated(false)
       }
-    }
-    setIsLoading(false)
+      setIsLoading(false)
+    })
+
+    return unsubscribe
   }, [])
 
   const login = (userData) => {
-    localStorage.setItem('loggedInUser', JSON.stringify(userData))
     setUser(userData)
     setIsAuthenticated(true)
   }
 
-  const logout = () => {
-    localStorage.removeItem('loggedInUser')
-    setUser(null)
-    setIsAuthenticated(false)
-  }
-
-  const updateUser = (updatedUserData) => {
-    const updatedUser = { ...user, ...updatedUserData }
-    localStorage.setItem('loggedInUser', JSON.stringify(updatedUser))
-    setUser(updatedUser)
+  const logout = async () => {
+    try {
+      await signOut(auth)
+      setUser(null)
+      setIsAuthenticated(false)
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, logout, updateUser }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, isLoading, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )

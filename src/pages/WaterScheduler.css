@@ -1,0 +1,604 @@
+.water-scheduler-header {
+  margin-bottom: 3rem;
+}
+
+.water-scheduler-header h1 {
+  font-size: 2.8rem;
+  color: #1b5e20;
+  margin-bottom: 1rem;
+  font-weight: 800;
+}
+
+.water-scheduler-header .page-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 0;
+}
+
+.water-scheduler-container {
+  max-width: 1200px;
+}
+
+/* Tips Section */
+.tips-section {
+  background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.tips-section h3 {
+  font-size: 1.8rem;
+  color: #f57f17;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.tip-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 5px solid #fbc02d;
+  transition: all 0.3s ease;
+}
+
+.tip-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.tip-icon {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.tip-card p {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Settings Section */
+.settings-section {
+  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.settings-section h2 {
+  font-size: 1.6rem;
+  color: #2e7d32;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.setting-item {
+  margin-bottom: 1.5rem;
+}
+
+.setting-item label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 0.8rem;
+}
+
+.borewells-control {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.control-btn {
+  padding: 10px 16px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 48px;
+}
+
+.control-btn:hover {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+.borewell-input {
+  flex: 1;
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.borewell-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  background: #f9fff9;
+}
+
+/* Error Alert */
+.error-alert {
+  background: #ffebee;
+  border-left: 5px solid #d32f2f;
+  color: #d32f2f;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* Crops Management */
+.crops-management {
+  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.section-header h2 {
+  font-size: 1.6rem;
+  color: #2e7d32;
+  margin: 0;
+  font-weight: 700;
+}
+
+.add-crop-btn {
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.add-crop-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+.add-crop-btn.active {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+}
+
+/* Add Crop Form */
+.add-crop-form {
+  background: #f9fff9;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  border: 2px dashed #4caf50;
+  animation: slideDown 0.3s ease;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4caf50;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+/* Crops List */
+.crops-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.crop-card {
+  background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 5px solid #4caf50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.crop-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.crop-info h3 {
+  font-size: 1.2rem;
+  color: #2e7d32;
+  margin: 0 0 0.8rem 0;
+  font-weight: 700;
+}
+
+.crop-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.crop-details p {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.crop-details strong {
+  color: #2e7d32;
+}
+
+.delete-btn {
+  padding: 0.6rem 1rem;
+  background: #ffebee;
+  color: #d32f2f;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.delete-btn:hover {
+  background: #d32f2f;
+  color: white;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding: 2rem;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+/* Generate Button */
+.generate-btn {
+  width: 100%;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 105, 92, 0.3);
+  margin-bottom: 2rem;
+}
+
+.generate-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(0, 105, 92, 0.4);
+}
+
+.generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Schedule Result */
+.schedule-result {
+  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  animation: slideDown 0.4s ease;
+}
+
+.schedule-result h2 {
+  font-size: 1.8rem;
+  color: #2e7d32;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.result-message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.result-message.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-left: 5px solid #4caf50;
+}
+
+.result-message.warning {
+  background: #fff3e0;
+  color: #f57f17;
+  border-left: 5px solid #fbc02d;
+}
+
+.schedule-content {
+  margin-bottom: 2rem;
+}
+
+.schedule-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card .label {
+  display: block;
+  font-size: 0.9rem;
+  color: #1b5e20;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.summary-card .value {
+  display: block;
+  font-size: 2rem;
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+.borewells-schedule {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.borewell-card {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 5px solid #1976d2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.borewell-card h3 {
+  font-size: 1.2rem;
+  color: #1565c0;
+  margin: 0 0 0.8rem 0;
+  font-weight: 700;
+}
+
+.total-time {
+  font-size: 1rem;
+  color: #1565c0;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  background: rgba(25, 118, 210, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #1976d2;
+}
+
+.crops-in-borewell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.crop-entry {
+  background: white;
+  padding: 0.8rem;
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+.crop-entry p {
+  font-size: 0.9rem;
+  margin: 0.3rem 0;
+  color: #333;
+}
+
+.crop-entry strong {
+  color: #1565c0;
+}
+
+.warning-section {
+  background: #fff3e0;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 5px solid #fbc02d;
+  margin-top: 1.5rem;
+}
+
+.warning-section h3 {
+  color: #f57f17;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.warning-section p {
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+.warning-section ul {
+  margin: 1rem 0 1rem 1.5rem;
+  color: #666;
+}
+
+.warning-section li {
+  margin: 0.4rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .water-scheduler-header h1 {
+    font-size: 2rem;
+  }
+
+  .tips-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .add-crop-btn {
+    width: 100%;
+  }
+
+  .crops-list {
+    grid-template-columns: 1fr;
+  }
+
+  .crop-card {
+    flex-direction: column;
+  }
+
+  .delete-btn {
+    width: 100%;
+  }
+
+  .borewells-schedule {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .water-scheduler-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .water-scheduler-container {
+    padding: 0;
+  }
+
+  .tips-section,
+  .settings-section,
+  .crops-management,
+  .schedule-result {
+    padding: 1rem;
+  }
+
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card .value {
+    font-size: 1.5rem;
+  }
+}

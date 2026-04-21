@@ -13,19 +13,24 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #2e7d32;
+  color: #1b5e20 !important;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid #4caf50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .back-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: #ffffff;
   transform: translateX(-5px);
+  color: #2e7d32 !important;
+  border-color: #2e7d32;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
 }
 
 .cost-estimator-container {

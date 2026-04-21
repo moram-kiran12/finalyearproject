@@ -21,7 +21,7 @@
   display: inline-block;
   padding: 0.8rem 1.5rem;
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-  color: white;
+  color: white !important;
   border-radius: 50px;
   font-weight: 600;
   transition: all 0.3s ease;
@@ -32,6 +32,8 @@
 .back-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(45, 80, 22, 0.3);
+  background: linear-gradient(135deg, #3d6b20 0%, #689f38 100%);
+  color: white !important;
 }
 
 .page-header h1 {

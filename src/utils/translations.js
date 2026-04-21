@@ -47,7 +47,7 @@ export const translations = {
     facebook: 'Facebook',
     twitter: 'Twitter',
     instagram: 'Instagram',
-    copyright: '© 2024 AgroTech. All rights reserved.',
+    copyright: '© 2026 AgroTech. All rights reserved.',
     builtWith: 'Built with 💚 for modern farmers',
     
     // Weather
@@ -229,7 +229,7 @@ export const translations = {
     facebook: 'ఫేస్‌బుక్',
     twitter: 'ట్విటర్',
     instagram: 'ఇన్‌స్టాగ్రామ్',
-    copyright: '© 2024 AgroTech. అన్ని హక్కులు రక్షించబడ్డాయి.',
+    copyright: '© 2026 AgroTech. అన్ని హక్కులు రక్షించబడ్డాయి.',
     builtWith: 'ఆధునిక రైతుల కోసం 💚 తో నిర్మించబడింది',
     
     // Weather
@@ -411,7 +411,7 @@ export const translations = {
     facebook: 'பேஸ்புக்',
     twitter: 'ட்விட்டர்',
     instagram: 'இன்ஸ்டாகிராம்',
-    copyright: '© 2024 AgroTech. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.',
+    copyright: '© 2026 AgroTech. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.',
     builtWith: 'நவீன விவசாயிகளுக்காக 💚 உடன் உருவாக்கப்பட்டது',
     
     // Weather
@@ -580,7 +580,7 @@ export const translations = {
     facebook: 'ಫೇಸ್‌ಬುಕ್',
     twitter: 'ಟ್ವಿಟರ್',
     instagram: 'ಇನ್‌ಸ್ಟಾಗ್ರಾಮ್',
-    copyright: '© 2024 AgroTech. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.',
+    copyright: '© 2026 AgroTech. ಎಲ್ಲಾ ಹಕ್ಕುಗಳನ್ನು ಕಾಯ್ದಿರಿಸಲಾಗಿದೆ.',
     builtWith: 'ಆಧುನಿಕ ರೈತರಿಗಾಗಿ 💚 ನೊಂದಿಗೆ ನಿರ್ಮಿಸಲಾಗಿದೆ',
     
     // Weather
@@ -749,7 +749,7 @@ export const translations = {
     facebook: 'ഫേസ്ബുക്ക്',
     twitter: 'ട്വിറ്റർ',
     instagram: 'ഇൻസ്റ്റാഗ്രാം',
-    copyright: '© 2024 AgroTech. എല്ലാ അവകാശങ്ങളും സംരക്ഷിതം.',
+    copyright: '© 2026 AgroTech. എല്ലാ അവകാശങ്ങളും സംരക്ഷിതം.',
     builtWith: 'ആധുനിക കർഷകർക്കായി 💚 കൊണ്ട് നിർമ്മിച്ചത്',
     
     // Weather
@@ -918,7 +918,7 @@ export const translations = {
     facebook: 'फेसबुक',
     twitter: 'ट्विटर',
     instagram: 'इंस्टाग्राम',
-    copyright: '© 2024 AgroTech. सर्वाधिकार सुरक्षित।',
+    copyright: '© 2026 AgroTech. सर्वाधिकार सुरक्षित।',
     builtWith: 'आधुनिक किसानों के लिए 💚 के साथ निर्मित',
     
     // Weather

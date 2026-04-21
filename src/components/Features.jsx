@@ -1,69 +1,65 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import './Features.css'
-import { useLanguage } from '../contexts/LanguageContext'
-import { translations } from '../utils/translations'
 
 function Features() {
-  const { currentLanguage } = useLanguage()
-  const t = translations[currentLanguage]
-
   const features = [
     {
       id: 1,
-      title: t.feature1Title,
-      description: t.feature1Desc,
+      title: 'Disease Diagnosis',
+      description: 'Identify crop diseases with AI and get instant voice guidance for treatment',
       icon: '🔍',
       link: '/signup',
       color: '#d32f2f'
     },
     {
       id: 2,
-      title: t.feature2Title,
-      description: t.feature2Desc,
+      title: 'Voice Assistance',
+      description: 'Get real-time voice guidance for farming tasks and queries',
       icon: '🌾',
       link: '/signup',
       color: '#7cb342'
     },
     {
       id: 3,
-      title: t.feature3Title,
-      description: t.feature3Desc,
+      title: 'Crop Cost Estimator',
+      description: 'Calculate accurate production costs for better profit planning',
       icon: '💰',
       link: '/signup',
       color: '#f57c00'
     },
     {
       id: 4,
-      title: t.feature4Title,
-      description: t.feature4Desc,
+      title: 'Water Scheduler',
+      description: 'Optimize irrigation schedules based on weather and soil conditions',
       icon: '💧',
       link: '/signup',
       color: '#1976d2'
     },
     {
       id: 5,
-      title: t.feature5Title,
-      description: t.feature5Desc,
+      title: 'Water Control',
+      description: 'Automated water management for efficient irrigation',
       icon: '🌐',
-      link: '/login',
+      link: '/signup',
       color: '#388e3c'
     },
-    {
+     {
       id: 6,
-      title: t.feature6Title,
-      description: t.feature6Desc,
+      title: 'Crop Recommendation',
+      description: 'Get personalized crop recommendations based on your region, season, and soil type',
       icon: '🌱',
       link: '/signup',
-      color: '#00897b'
-    }
+      color: '#00897b',
+    },
+    
   ]
 
   return (
     <section className="features-section" id="features">
       <div className="features-container">
-        <h2 className="section-title">{t.sectionTitle}</h2>
-        <p className="section-subtitle">{t.sectionSubtitle}</p>
+        <h2 className="section-title">Our Features</h2>
+        <p className="section-subtitle">Smart solutions tailored for modern farming</p>
         
         <div className="features-grid">
           {features.map((feature) => (

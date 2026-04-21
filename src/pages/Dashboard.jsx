@@ -18,10 +18,34 @@ function Dashboard() {
   const [editFormData, setEditFormData] = useState({
     fullName: '',
     username: '',
-    email: '',
-    phone: '',
-    farmName: ''
+    email: ''
   })
+  const [validationErrors, setValidationErrors] = useState({})
+
+  // Validation functions
+  const validateFullName = (value) => {
+    if (!value.trim()) return 'Full Name is required'
+    if (!/^[a-zA-Z\s]+$/.test(value)) return 'Full Name should contain only alphabets and spaces'
+    return ''
+  }
+
+  const validateUsername = (value) => {
+    if (value.trim()) {
+      if (!/^[a-z0-9_]{4,20}$/.test(value)) {
+        return 'Username must be 4-20 characters, lowercase letters, numbers, and underscore only'
+      }
+    }
+    return ''
+  }
+
+  const validateEmail = (value) => {
+    if (!value.trim()) return 'Email is required'
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(value)) return 'Please enter a valid email address'
+    return ''
+  }
+
+
 
   useEffect(() => {
     // Get user's location
@@ -51,9 +75,7 @@ function Dashboard() {
     setEditFormData({
       fullName: user.fullName || '',
       username: user.username || '',
-      email: user.email || '',
-      phone: user.phone || '',
-      farmName: user.farmName || ''
+      email: user.email || ''
     })
     setIsEditMode(true)
   }
@@ -65,17 +87,55 @@ function Dashboard() {
       ...prev,
       [name]: value
     }))
+
+    // Real-time validation
+    let error = ''
+    switch (name) {
+      case 'fullName':
+        error = validateFullName(value)
+        break
+      case 'username':
+        error = validateUsername(value)
+        break
+      case 'email':
+        error = validateEmail(value)
+        break
+      default:
+        break
+    }
+
+    setValidationErrors(prev => ({
+      ...prev,
+      [name]: error
+    }))
   }
 
   // Handle save profile
-  const handleSaveProfile = () => {
-    if (!editFormData.fullName.trim() || !editFormData.email.trim()) {
-      alert('Please fill in required fields (Name and Email)')
+  const handleSaveProfile = async () => {
+    // Validate all fields
+    const errors = {
+      fullName: validateFullName(editFormData.fullName),
+      email: validateEmail(editFormData.email),
+      username: validateUsername(editFormData.username)
+    }
+
+    setValidationErrors(errors)
+
+    // Check if there are any errors
+    if (Object.values(errors).some(error => error !== '')) {
+      alert('Please fix all errors before saving')
       return
     }
-    updateUser(editFormData)
-    setIsEditMode(false)
-    alert('Profile updated successfully!')
+
+    try {
+      await updateUser(editFormData)
+      setIsEditMode(false)
+      setValidationErrors({})
+      alert('Profile updated successfully!')
+    } catch (error) {
+      console.error('Error saving profile:', error)
+      alert('Failed to save profile. Please try again.')
+    }
   }
 
   // Handle cancel edit
@@ -84,10 +144,9 @@ function Dashboard() {
     setEditFormData({
       fullName: '',
       username: '',
-      email: '',
-      phone: '',
-      farmName: ''
+      email: ''
     })
+    setValidationErrors({})
   }
 
   // Fetch location name from coordinates
@@ -234,7 +293,6 @@ function Dashboard() {
                   <h3>{user.fullName}</h3>
                   <p>@{user.username}</p>
                   <p className="profile-email">{user.email}</p>
-                  {user.phone && <p className="profile-phone">📱 {user.phone}</p>}
                   <p className="profile-member">Member since {user.createdAt}</p>
                 </div>
               </div>
@@ -242,7 +300,7 @@ function Dashboard() {
               <div className="profile-details">
                 <div className="detail-item">
                   <span>Account ID</span>
-                  <strong>#{user.id}</strong>
+                  <strong>{user.id.substring(0, 1).toUpperCase()}19{user.id.substring(1, 3).toUpperCase()}23{user.id.substring(3, 4).toUpperCase()}0098</strong>
                 </div>
                 <div className="detail-item">
                   <span>Status</span>
@@ -362,8 +420,9 @@ function Dashboard() {
                   value={editFormData.fullName}
                   onChange={handleInputChange}
                   placeholder="Enter your full name"
-                  className="form-input"
+                  className={`form-input ${validationErrors.fullName ? 'error' : ''}`}
                 />
+                {validationErrors.fullName && <span className="error-message">{validationErrors.fullName}</span>}
               </div>
 
               <div className="form-group">
@@ -373,9 +432,10 @@ function Dashboard() {
                   name="username"
                   value={editFormData.username}
                   onChange={handleInputChange}
-                  placeholder="Enter your username"
-                  className="form-input"
+                  placeholder="Enter your username (4-20 chars, lowercase, numbers, _)"
+                  className={`form-input ${validationErrors.username ? 'error' : ''}`}
                 />
+                {validationErrors.username && <span className="error-message">{validationErrors.username}</span>}
               </div>
 
               <div className="form-group">
@@ -386,38 +446,11 @@ function Dashboard() {
                   value={editFormData.email}
                   onChange={handleInputChange}
                   placeholder="Enter your email"
-                  className="form-input"
+                  className={`form-input ${validationErrors.email ? 'error' : ''}`}
                 />
+                {validationErrors.email && <span className="error-message">{validationErrors.email}</span>}
               </div>
 
-              <div className="form-group">
-                <label>Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={editFormData.phone}
-                  onChange={handleInputChange}
-                  placeholder="Enter your 10-digit phone number"
-                  className="form-input"
-                  maxLength="10"
-                  pattern="[0-9]*"
-                  onInput={(e) => {
-                    e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 10)
-                  }}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Farm Name</label>
-                <input
-                  type="text"
-                  name="farmName"
-                  value={editFormData.farmName}
-                  onChange={handleInputChange}
-                  placeholder="Enter your farm name"
-                  className="form-input"
-                />
-              </div>
             </div>
 
             <div className="modal-footer">

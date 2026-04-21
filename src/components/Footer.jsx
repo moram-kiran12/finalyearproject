@@ -19,9 +19,9 @@ function Footer() {
           <div className="footer-section">
             <h4>{t.quickLinks}</h4>
             <ul>
-              <li><a href="#features">{t.navFeatures}</a></li>
+              <li><a href="/#features">{t.navFeatures}</a></li>
               <li><a href="/">{t.navHome}</a></li>
-              <li><a href="#footer">{t.navContact}</a></li>
+              <li><a href="/#contact">{t.navContact}</a></li>
             </ul>
           </div>
 
@@ -38,9 +38,9 @@ function Footer() {
           <div className="footer-section">
             <h4>{t.connect}</h4>
             <div className="social-links">
-              <a href="#" className="social-link">{t.facebook}</a>
-              <a href="#" className="social-link">{t.twitter}</a>
-              <a href="#" className="social-link">{t.instagram}</a>
+              <a href="https://www.facebook.com/profile.php?id=61588444477561" target="_blank" rel="noopener noreferrer" className="social-link">{t.facebook}</a>
+              <a href="https://x.com/AgroTech1003" target="_blank" rel="noopener noreferrer" className="social-link">{t.twitter}</a>
+              <a href="https://www.instagram.com/agrotech503/" target="_blank" rel="noopener noreferrer" className="social-link">{t.instagram}</a>
             </div>
           </div>
         </div>

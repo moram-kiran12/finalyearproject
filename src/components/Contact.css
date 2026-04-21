@@ -1,0 +1,104 @@
+/* Contact Section - Minimal & Compact */
+.contact-section {
+  width: 100%;
+  padding: 40px 20px;
+  background: #f9fdf7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contact Card - Compact */
+.contact-card {
+  max-width: 400px;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  text-align: center;
+}
+
+.contact-card:hover {
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Contact Title - Small & Clean */
+.contact-title {
+  font-size: 1.3rem;
+  color: #16a34a;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+}
+
+/* Contact Details */
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Contact Item - Inline & Minimal */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  padding: 8px 0;
+}
+
+.contact-icon {
+  font-size: 18px;
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contact Link */
+.contact-link {
+  color: #16a34a;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline;
+}
+
+.contact-link:hover {
+  color: #22c55e;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .contact-section {
+    padding: 30px 15px;
+  }
+
+  .contact-card {
+    max-width: 100%;
+    padding: 20px 25px;
+  }
+
+  .contact-title {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .contact-item {
+    font-size: 0.9rem;
+    gap: 8px;
+  }
+
+  .contact-icon {
+    font-size: 16px;
+  }
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+

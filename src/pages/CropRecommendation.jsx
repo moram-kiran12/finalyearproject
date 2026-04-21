@@ -9,6 +9,9 @@ function CropRecommendation() {
   const [season, setSeason] = useState('')
   const [soilType, setSoilType] = useState('')
   const [recommendation, setRecommendation] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const GEMINI_API_KEY = 'AIzaSyAPgacFRxZQaFlPo5u_c6Egmma0RSh3o_c' // Replace with your API key
 
   const handleGetRecommendation = async () => {
     if (!region || !season || !soilType) {
@@ -16,23 +19,57 @@ function CropRecommendation() {
       return
     }
 
+    setLoading(true)
     try {
-      const response = await fetch('http://localhost:5000/api/crop-recommendation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          region: region,
-          season: season,
-          soil_type: soilType
-        })
-      })
+      const prompt = `You are an agricultural expert. Based on the following conditions, recommend the best crops to plant:
+      
+Region: ${region}
+Season: ${season}
+Soil Type: ${soilType}
+
+Please provide:
+1. Top 3-5 recommended crops
+2. Why these crops are suitable for these conditions
+3. Key care tips for each crop
+4. Expected yield duration
+
+Keep the response concise and practical.`
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: prompt
+                  }
+                ]
+              }
+            ]
+          })
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('Failed to get recommendation from Gemini')
+      }
 
       const data = await response.json()
-      setRecommendation(data)
+      const recommendationText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No recommendation generated'
+      setRecommendation({
+        crops: recommendationText
+      })
     } catch (err) {
-      alert('Error getting recommendation. Make sure backend is running.')
+      alert('Error: ' + err.message + '\n\nMake sure to add your Gemini API key in the code.')
+      console.error(err)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -125,27 +162,30 @@ function CropRecommendation() {
 
               <button
                 onClick={handleGetRecommendation}
+                disabled={loading}
                 style={{
-                  background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%)',
+                  background: loading ? '#ccc' : 'linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%)',
                   color: 'white',
                   padding: '1rem 2rem',
                   borderRadius: '50px',
                   border: 'none',
                   fontSize: '1rem',
                   fontWeight: '600',
-                  cursor: 'pointer',
+                  cursor: loading ? 'not-allowed' : 'pointer',
                   width: '100%',
                   transition: 'all 0.3s ease'
                 }}
               >
-                🌱 Get Recommendations
+                {loading ? '⏳ Getting Recommendations...' : '🌱 Get Recommendations'}
               </button>
             </div>
 
             {recommendation && (
               <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: 'rgba(85, 139, 47, 0.1)', borderRadius: '8px' }}>
                 <h3 style={{ color: 'var(--primary-color)', marginBottom: '1rem' }}>Recommended Crops</h3>
-                <p>{recommendation.crops || 'Based on your conditions, these crops are recommended...'}</p>
+                <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', color: '#333' }}>
+                  {recommendation.crops}
+                </div>
               </div>
             )}
           </div>

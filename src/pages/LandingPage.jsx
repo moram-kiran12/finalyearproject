@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Weather from '../components/Weather'
 import Features from '../components/Features'
+import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import './LandingPage.css'
 
@@ -32,6 +33,7 @@ function LandingPage() {
         <Hero />
         <Weather />
         <Features />
+        <Contact />
       </main>
       <Footer />
     </div>

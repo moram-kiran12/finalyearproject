@@ -47,34 +47,93 @@ function Signup() {
     return { strength, requirements }
   }
 
-  // Handle input change
+  // Username validation function with all rules
+  const validateUsername = (username) => {
+    if (!username.trim()) {
+      return 'Username is required'
+    }
+
+    username = username.trim()
+
+    // Length check: 3 to 20 characters
+    if (username.length < 3 || username.length > 20) {
+      return 'Username must be between 3 to 20 characters'
+    }
+
+    // At least one letter required
+    if (!/[a-zA-Z]/.test(username)) {
+      return 'Username must contain at least one letter'
+    }
+
+    // Allowed characters: letters, numbers, underscore, dot
+    if (!/^[a-zA-Z0-9_.]+$/.test(username)) {
+      return 'Username can only contain letters, numbers, underscore, and dot'
+    }
+
+    // Must NOT start or end with _ or .
+    if (/^[_.]/.test(username) || /[_.]$/.test(username)) {
+      return 'Username cannot start or end with underscore or dot'
+    }
+
+    // Must NOT have consecutive special characters
+    if (/[_.]{2,}/.test(username)) {
+      return 'Username cannot have consecutive underscores or dots'
+    }
+
+    return ''
+  }
+
+  // Handle input change with real-time validation
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }))
-    // Clear error for this field
-    if (errors[name]) {
-      setErrors(prevState => ({
-        ...prevState,
-        [name]: ''
-      }))
+
+    // Real-time validation for specific fields
+    let error = ''
+    switch (name) {
+      case 'fullName':
+        if (value.trim() && !/^[a-zA-Z\s]+$/.test(value)) {
+          error = 'Full Name should contain only alphabets and spaces'
+        }
+        break
+      case 'username':
+        if (value.trim()) {
+          error = validateUsername(value)
+        }
+        break
+      case 'email':
+        if (value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          error = 'Please enter a valid email'
+        }
+        break
+      default:
+        break
     }
+
+    setErrors(prevState => ({
+      ...prevState,
+      [name]: error
+    }))
   }
 
   // Validate form
   const validateForm = () => {
     const newErrors = {}
 
+    // Full Name validation - Only alphabets and spaces
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required'
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.fullName)) {
+      newErrors.fullName = 'Full Name should contain only alphabets and spaces'
     }
 
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required'
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters'
+    // Username validation - 3-20 chars with strict requirements
+    const usernameError = validateUsername(formData.username)
+    if (usernameError) {
+      newErrors.username = usernameError
     }
 
     if (!formData.email.trim()) {
@@ -292,8 +351,8 @@ function Signup() {
                         <li className={/\d/.test(formData.password) ? 'met' : ''}>
                           {/\d/.test(formData.password) ? '✓' : '○'} Number (0-9)
                         </li>
-                        <li className={/@$!%*?&/.test(formData.password) ? 'met' : ''}>
-                          {/@$!%*?&/.test(formData.password) ? '✓' : '○'} Special (@$!%*?&)
+                        <li className={/[@$!%*?&]/.test(formData.password) ? 'met' : ''}>
+                          {/[@$!%*?&]/.test(formData.password) ? '✓' : '○'} Special (@$!%*?&)
                         </li>
                         <li className={formData.password.length >= 8 ? 'met' : ''}>
                           {formData.password.length >= 8 ? '✓' : '○'} At least 8 characters
